@@ -87,10 +87,12 @@ filter {
       convert => [ "orig_ip_bytes", "integer" ]
       convert => [ "resp_pkts", "integer" ]
       convert => [ "resp_ip_bytes", "integer" ]
-      rename =>  [ "id.orig_h", "id_orig_host" ]
-      rename =>  [ "id.orig_p", "id_orig_port" ]
-      rename =>  [ "id.resp_h", "id_resp_host" ]
-      rename =>  [ "id.resp_p", "id_resp_port" ]
+      # Rename / add new fields for Ergo-Witness C# naming compatibility
+      rename =>  [ "id.orig_h", "id_orig_h" ]
+      rename =>  [ "id.orig_p", "id_orig_p" ]
+      rename =>  [ "id.resp_h", "id_resp_h" ]
+      rename =>  [ "id.resp_p", "id_resp_p" ]
+      add_field =>  { "runtime_timestamp" => "%{@timestamp}" }
     }
   }
 }

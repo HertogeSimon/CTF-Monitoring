@@ -1,0 +1,3 @@
+[submodule "src/dofler/src"]
+	path = src/dofler/src
+	url = https://github.com/HertogeSimon/DoFler.git

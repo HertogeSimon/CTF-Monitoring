@@ -1,3 +1,3 @@
 *.log
-src/bro/.state/
 src/bro/data/
+src/dofler/db/

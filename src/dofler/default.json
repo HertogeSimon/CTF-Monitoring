@@ -1,0 +1,44 @@
+{
+	"WebUI": {
+		"title": "CTF - Wall of Sheep",
+		"slogan": "Wake up sheeple!"
+	},
+	"Database": {
+		"uri": "mysql://dofler:dofler@localhost/dofler",
+		"logging": false
+	},
+	"AppServer": {
+		"port": 3000,
+		"debug": true,
+		"static": "static",
+		"templates": "templates",
+		"images": "images"
+    },
+    "NSFW": {
+        "address": "http://localhost:4000"
+    },
+	"Monitoring": {
+		"interface": "wlp2s0",
+		"Driftnet": {
+			"autostart": true,
+			"tmp": "/tmp/driftnet",
+			"nsfw_filter": false
+		},
+		"TShark": {
+			"autostart": true
+		},
+		"NGrep": {
+			"autostart": true,
+			"nsfw_filter": false
+		},
+		"Ettercap": {
+			"autostart": true
+		},
+		"PVS": {
+			"autostart": false,
+			"hostname": "PVS_HOSTNAME",
+			"username": "PVS_USERNAME",
+			"password": "PVS_PASSWORD"
+		}
+	}
+}
