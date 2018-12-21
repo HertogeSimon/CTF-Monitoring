@@ -148,8 +148,13 @@
 
 # Bugs todo
 - create folder 'images' in dofler
-- dofler subproject Git
 - ctfd urls in markdown of niet?
+- dofler wrong .json settings file
+- logstash template.json
+- dashboard opzetten
+- wat bij problemen?
+- licenses
+- ctfd data folder (now in /src/)
 
 # To research
 http://demo.naggen.org/  
@@ -165,3 +170,4 @@ https://www.elastic.co/guide/en/beats/packetbeat/current/index.html
 https://www.youtube.com/watch?v=kqD3IzhKUQI  
 https://wiki.wireshark.org/CaptureSetup/Ethernet  
 http://donmizutani.com/pages/snort/setup/2-mirroring-network-traffic/  
+http://benhoffman.tech/data%20vis/ergowitness/general/project/2017/03/10/prototype-of-ergo-witness.html

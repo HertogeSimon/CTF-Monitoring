@@ -38,7 +38,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - 'LS_JAVA_OPTS=-Xmx256m -Xms256m'
+      - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
       - 'TZ=Europe/Brussels'
     networks:
       - elk
@@ -101,41 +101,69 @@ services:
   #   depends_on:
   #     - elasticsearch
 
-  mariadb:
-    image: mariadb:10.4.0-bionic
-    volumes:
-      - ./dofler/db:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    restart: always
-    environment:
-      - 'MYSQL_ROOT_PASSWORD=dofler'
-      - 'MYSQL_DATABASE=dofler'
-      - 'MYSQL_USER=dofler'
-      - 'MYSQL_PASSWORD=dofler'
-      - 'TZ=Europe/Brussels'
-    networks:
-      - elk
+  # mariadb:
+  #   image: mariadb:10.4.0-bionic
+  #   volumes:
+  #     - ./mariadb/db:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   restart: always
+  #   environment:
+  #     - 'MYSQL_ROOT_PASSWORD=root'
+  #     - 'MYSQL_DATABASE=dofler'
+  #     - 'MYSQL_USER=root'
+  #     - 'MYSQL_PASSWORD=root'
+  #     - 'TZ=Europe/Brussels'
+  #   networks:
+  #     - elk
+  #   # command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
 
-  dofler:
-    build:
-      context: dofler/
-    ports:
-      - "3000:3000"
-      - "4000:4000"
-    environment:
-      - 'TZ=Europe/Brussels'
-    network_mode: host
-    privileged: true
-    depends_on:
-      - mariadb
+  # dofler:
+  #   build:
+  #     context: dofler/
+  #   ports:
+  #     - "3000:3000"
+  #     - "4000:4000"
+  #   environment:
+  #     - 'TZ=Europe/Brussels'
+  #   network_mode: host
+  #   privileged: true
+  #   depends_on:
+  #     - mariadb
 
-  ctfd:
-    image: ctfd/ctfd
-    ports:
-      - "8000:8000"
-    environment:
-      - 'TZ=Europe/Brussels'
+  # ctfd:
+  #   build: ctfd/
+  #   restart: always
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - UPLOAD_FOLDER=/var/uploads
+  #     - DATABASE_URL=mysql+pymysql://root:root@mariadb/ctfd
+  #     - REDIS_URL=redis://cache:6379
+  #     - WORKERS=4
+  #   volumes:
+  #     - .ctfd/data/CTFd/logs:/var/log/CTFd
+  #     - .ctfd/data/CTFd/uploads:/var/uploads
+  #     - .ctfd/:/opt/CTFd:ro
+  #   depends_on:
+  #     - mariadb
+  #   networks:
+  #     - elk
+
+  # cache:
+  #   image: redis:4
+  #   restart: always
+  #   volumes:
+  #   - .ctfd/data/redis:/data
+  #   networks:
+  #     - elk
+
+  # ctfd:
+  #   image: ctfd/ctfd
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - 'TZ=Europe/Brussels'
 
 networks:
 

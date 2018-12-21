@@ -4,7 +4,7 @@
 		"slogan": "Wake up sheeple!"
 	},
 	"Database": {
-		"uri": "mysql://dofler:dofler@localhost/dofler",
+		"uri": "mysql://root:root@localhost/dofler",
 		"logging": false
 	},
 	"AppServer": {
