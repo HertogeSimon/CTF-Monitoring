@@ -1,6 +1,6 @@
 # CTF Monitoring
 
-An all-in-one monitoring system made for Capture The Flag competitions, including a dashboard, live attack/attempt visualisation, and a wall of sheep.
+An all-in-one monitoring system made specifically for Capture The Flag competitions. Includes a dashboard, live attack/attempt visualisation, a Wall of Sheep and some minimal CTFd integration.
 
 ![](preview.png)
 
@@ -20,7 +20,7 @@ An all-in-one monitoring system made for Capture The Flag competitions, includin
 
 1. Install Docker + Docker Compose
 1. Run `docker-compose up` in docker/ (this can take a while...)
-1. Go to `http://localhost:5601`/
+1. Go to [http://localhost:5601/](http://localhost:5601/)
 1. Create a new index pattern (e.g. 'logstash*') with index '@timestamp'
 1. Go to Management -> Saved Objects, and import dashboard.js
 
@@ -42,25 +42,25 @@ An all-in-one monitoring system made for Capture The Flag competitions, includin
 1. Run ctf2hb.sh
 
 # Default ports
-Kibana: http://localhost:5601/
-DoFler: http://localhost:3000/
-CTFd: http://localhost:8000/
+Kibana: http://localhost:5601/  
+DoFler: http://localhost:3000/  
+CTFd: http://localhost:8000/  
 Elasticsearch API: http://localhost:9200/
 
 All of these can be changed in docker-compose.yml for outside connections.
 
 # Useful docker commands
 
-Recreate all containers (with old images)
+Recreate all containers (with old images)  
 `docker-compose up --force-recreate --remove-orphans --renew-anon-volumes`
 
-Rebuild a single image:
+Rebuild a single image:  
 `docker build --no-cache <container_folder>`
 
-Follow logs of a single (running) container:
+Follow logs of a single (running) container:  
 `docker logs <container_name> -f`
 
-Connect to a running container:
+Connect to a running container:  
 `docker exec -it <container_name> bash`
 
 => This only works when the image has no defined entrypoint.
@@ -87,9 +87,9 @@ The first installation can easily take around 15 minutes; subsequent starts shou
 **Can I also analyze prerecorded pcap files with this?**
 
 Yes! Change the startup command of Bro from "-i \<network adapter\>" to "-r my.pcap", as currently commented out in docker/docker-compose.yml.
-Some useful pcap files can be found on the following sites:
-https://www.netresec.com/?page=PcapFiles
-https://wiki.wireshark.org/SampleCaptures
+Some useful pcap files can be found on the following sites:  
+https://www.netresec.com/?page=PcapFiles  
+https://wiki.wireshark.org/SampleCaptures  
 http://tcpreplay.appneta.com/wiki/captures.html
 
 **How can I add Bro scripts?**
