@@ -1,7 +1,7 @@
 #!/bin/sh
 
-username="test"
-password="test"
+username="admin"
+password="admin"
 url="http://localhost:8000"
 
 request="$(curl -i "${url}/login" 2>/dev/null | sed 's/\r//g')"

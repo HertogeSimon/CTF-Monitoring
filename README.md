@@ -21,8 +21,8 @@ An all-in-one monitoring system made specifically for Capture The Flag competiti
 1. If necessary, change the adapter at services.bro.command in docker/docker-compose.yml
 1. Run `docker-compose up` in docker/ (this can take a while...)
 1. Navigate to [http://localhost:5601/](http://localhost:5601/)
-1. Create a new index pattern (e.g. 'logstash*') with index '@timestamp'
-1. Go to Management -> Saved Objects, and import dashboard.js
+1. Go to Management -> Saved Objects, and import export.json
+1. Go to Dashboard, click on 'logstash*' and make it the default index (star icon), and refresh
 
 ## Live visualisation
 
@@ -98,6 +98,11 @@ http://tcpreplay.appneta.com/wiki/captures.html
 1. Add a volume to the Bro container overwriting local.bro
 1. Add a filter to the logstash pipeline if necessary
 1. Add the new fields to logstash-template.json
+
+**How can I change the dashboards?**
+
+1. Add a visualization
+2. Add it to a dashboard
 
 Note: At the moment, a lot of bro output does not get processed. You can enable these by moving logstash filters from the disabled to the default pipeline directory.
 
