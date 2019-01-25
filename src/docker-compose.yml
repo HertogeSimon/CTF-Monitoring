@@ -2,19 +2,19 @@ version: '2'
 
 services:
 
-  # bro:
-  #   image: blacktop/bro:latest
-  #   # Live traffic
-  #   command: -i wlp2s0
-  #   # Analyze PCAP
-  #   # command: -r my.pcap
-  #   volumes:
-  #     - /tmp/bro:/pcap:rw
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
-  #   cap_add:
-  #     - NET_RAW
-  #   network_mode: host
+  bro:
+    image: blacktop/bro:latest
+    # Live traffic
+    command: -i wlp2s0
+    # Analyze PCAP
+    # command: -r my.pcap
+    volumes:
+      - /tmp/bro:/pcap:rw
+    environment:
+      - 'TZ=Europe/Brussels'
+    cap_add:
+      - NET_RAW
+    network_mode: host
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
@@ -29,23 +29,23 @@ services:
     networks:
       - elk
 
-  # logstash:
-  #   build:
-  #     context: logstash/
-  #   volumes:
-  #     - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-  #     - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-  #     - /tmp/bro:/usr/share/logstash/bro:ro
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
-  #     - 'TZ=Europe/Brussels'
-  #   networks:
-  #     - elk
-  #   depends_on:
-  #     - bro
-  #     - elasticsearch
+  logstash:
+    build:
+      context: logstash/
+    volumes:
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - /tmp/bro:/usr/share/logstash/bro:ro
+    ports:
+      - "5000:5000"
+    environment:
+      - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
+      - 'TZ=Europe/Brussels'
+    networks:
+      - elk
+    depends_on:
+      - bro
+      - elasticsearch
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.5.4
@@ -60,16 +60,16 @@ services:
     depends_on:
       - elasticsearch
 
-  # metricbeat:
-  #   image: docker.elastic.co/beats/metricbeat:6.5.4
-  #   # command: setup --dashboards
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
-  #   networks:
-  #     - elk
-  #   depends_on:
-  #     - elasticsearch
-  #     - kibana
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:6.5.4
+    # command: setup --dashboards
+    environment:
+      - 'TZ=Europe/Brussels'
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+      - kibana
 
   heartbeat:
     image: docker.elastic.co/beats/heartbeat:6.5.4
@@ -83,39 +83,32 @@ services:
     depends_on:
       - elasticsearch
 
-  # mariadb:
-  #   image: mariadb:10.4.0-bionic
-  #   ports:
-  #     - "3306:3306"
-  #   restart: always
-  #   environment:
-  #     - 'MYSQL_ROOT_PASSWORD=dofler'
-  #     - 'MYSQL_DATABASE=dofler'
-  #     - 'MYSQL_USER=dofler'
-  #     - 'MYSQL_PASSWORD=dofler'
-  #     - 'TZ=Europe/Brussels'
-  #   networks:
-  #     - elk
-
-  # dofler:
-  #   build:
-  #     context: dofler/
-  #   volumes:
-  #     - ./dofler/default.json:/usr/share/dofler/config/default.json:ro
-  #   ports:
-  #     - "3000:3000"
-  #     - "4000:4000"
-  #   network_mode: host
-  #   privileged: true
-  #   depends_on:
-  #     - mariadb
-
-  ctfd:
-    image: ctfd/ctfd
+  mariadb:
+    image: mariadb:10.4.0-bionic
     ports:
-      - "8000:8000"
+      - "3306:3306"
+    restart: always
     environment:
+      - 'MYSQL_ROOT_PASSWORD=dofler'
+      - 'MYSQL_DATABASE=dofler'
+      - 'MYSQL_USER=dofler'
+      - 'MYSQL_PASSWORD=dofler'
       - 'TZ=Europe/Brussels'
+    networks:
+      - elk
+
+  dofler:
+    build:
+      context: dofler/
+    volumes:
+      - ./dofler/default.json:/usr/share/dofler/config/default.json:ro
+    ports:
+      - "3000:3000"
+      - "4000:4000"
+    network_mode: host
+    privileged: true
+    depends_on:
+      - mariadb
 
 networks:
 
