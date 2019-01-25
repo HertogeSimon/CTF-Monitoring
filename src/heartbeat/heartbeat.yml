@@ -1,0 +1,8 @@
+heartbeat.config.monitors:
+  path: /usr/share/heartbeat/monitors/*.yml
+  reload.enabled: true
+  reload.period: 5s
+heartbeat.scheduler:
+  limit: 10
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]

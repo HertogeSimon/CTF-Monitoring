@@ -1735,8 +1735,8 @@
             }
           }
         },
-        "logstash_time":{
-          "type":"long"
+        "logstash_timestamp":{
+          "type":"date"
         },
         "mac":{
           "type":"text",

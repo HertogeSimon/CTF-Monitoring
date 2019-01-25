@@ -2,19 +2,22 @@ version: '2'
 
 services:
 
-  bro:
-    image: blacktop/bro:latest
-    command: -i wlp2s0
-    volumes:
-      - ./bro/data:/pcap:rw
-    environment:
-      - 'TZ=Europe/Brussels'
-    cap_add:
-      - NET_RAW
-    network_mode: host
+  # bro:
+  #   image: blacktop/bro:latest
+  #   # Live traffic
+  #   command: -i wlp2s0
+  #   # Analyze PCAP
+  #   # command: -r my.pcap
+  #   volumes:
+  #     - /tmp/bro:/pcap:rw
+  #   environment:
+  #     - 'TZ=Europe/Brussels'
+  #   cap_add:
+  #     - NET_RAW
+  #   network_mode: host
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     volumes:
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
@@ -25,30 +28,29 @@ services:
       - 'TZ=Europe/Brussels'
     networks:
       - elk
-    depends_on:
-      - bro
 
-  logstash:
-    build:
-      context: logstash/
-    volumes:
-      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-      - ./bro/data:/usr/share/logstash/bro:ro
-    ports:
-      - "5000:5000"
-    environment:
-      - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
-      - 'TZ=Europe/Brussels'
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
+  # logstash:
+  #   build:
+  #     context: logstash/
+  #   volumes:
+  #     - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+  #     - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+  #     - /tmp/bro:/usr/share/logstash/bro:ro
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - 'LS_JAVA_OPTS=-Xmx512m -Xms512m'
+  #     - 'TZ=Europe/Brussels'
+  #   networks:
+  #     - elk
+  #   depends_on:
+  #     - bro
+  #     - elasticsearch
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.4.3
-    volumes:
-      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    image: docker.elastic.co/kibana/kibana:6.5.4
+    # volumes:
+    #   - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
       - "5601:5601"
     environment:
@@ -59,111 +61,61 @@ services:
       - elasticsearch
 
   # metricbeat:
-  #   image: docker.elastic.co/beats/metricbeat:6.4.3
-  #   volumes:
-  #     - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/config/metricbeat.yml:ro
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
-  #   depends_on:
-  #     - elasticsearch
-
-  # heartbeat:
-  #   image: docker.elastic.co/beats/heartbeat:6.4.3
-  #   volumes:
-  #     - ./heartbeat/heartbeat.yml:/usr/share/heartbeat/config/heartbeat.yml:ro
+  #   image: docker.elastic.co/beats/metricbeat:6.5.4
+  #   # command: setup --dashboards
   #   environment:
   #     - 'TZ=Europe/Brussels'
   #   networks:
   #     - elk
   #   depends_on:
   #     - elasticsearch
+  #     - kibana
 
-  # packetbeat:
-  #   image: docker.elastic.co/beats/packetbeat:6.4.3
-  #   volumes:
-  #     - ./packetbeat/packetbeat.yml:/usr/share/packetbeat/config/packetbeat.yml:ro
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
-  #   networks:
-  #     - elk
-  #   depends_on:
-  #     - elasticsearch
-
-  # ergo-witness:
-  #   build:
-  #     context: ergo-witness/
-  #   volumes:
-  #     - ./ergo-witness:/usr/share/ergo-witness/:ro
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
-  #   networks:
-  #     - elk
-  #   depends_on:
-  #     - elasticsearch
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:6.5.4
+    volumes:
+      - ./heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+      - ./heartbeat/monitors:/usr/share/heartbeat/monitors:ro
+    environment:
+      - 'TZ=Europe/Brussels'
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
 
   # mariadb:
   #   image: mariadb:10.4.0-bionic
-  #   volumes:
-  #     - ./mariadb/db:/var/lib/mysql
   #   ports:
   #     - "3306:3306"
   #   restart: always
   #   environment:
-  #     - 'MYSQL_ROOT_PASSWORD=root'
+  #     - 'MYSQL_ROOT_PASSWORD=dofler'
   #     - 'MYSQL_DATABASE=dofler'
-  #     - 'MYSQL_USER=root'
-  #     - 'MYSQL_PASSWORD=root'
+  #     - 'MYSQL_USER=dofler'
+  #     - 'MYSQL_PASSWORD=dofler'
   #     - 'TZ=Europe/Brussels'
   #   networks:
   #     - elk
-  #   # command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
 
   # dofler:
   #   build:
   #     context: dofler/
+  #   volumes:
+  #     - ./dofler/default.json:/usr/share/dofler/config/default.json:ro
   #   ports:
   #     - "3000:3000"
   #     - "4000:4000"
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
   #   network_mode: host
   #   privileged: true
   #   depends_on:
   #     - mariadb
 
-  # ctfd:
-  #   build: ctfd/
-  #   restart: always
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - UPLOAD_FOLDER=/var/uploads
-  #     - DATABASE_URL=mysql+pymysql://root:root@mariadb/ctfd
-  #     - REDIS_URL=redis://cache:6379
-  #     - WORKERS=4
-  #   volumes:
-  #     - .ctfd/data/CTFd/logs:/var/log/CTFd
-  #     - .ctfd/data/CTFd/uploads:/var/uploads
-  #     - .ctfd/:/opt/CTFd:ro
-  #   depends_on:
-  #     - mariadb
-  #   networks:
-  #     - elk
-
-  # cache:
-  #   image: redis:4
-  #   restart: always
-  #   volumes:
-  #   - .ctfd/data/redis:/data
-  #   networks:
-  #     - elk
-
-  # ctfd:
-  #   image: ctfd/ctfd
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - 'TZ=Europe/Brussels'
+  ctfd:
+    image: ctfd/ctfd
+    ports:
+      - "8000:8000"
+    environment:
+      - 'TZ=Europe/Brussels'
 
 networks:
 

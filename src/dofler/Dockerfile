@@ -7,6 +7,5 @@ RUN npm install -g npm@latest && \
     npm install && \
     mkdir images
 COPY ./src /usr/share/dofler
-# ENV MYSQL_ROOT_PASSWORD dofler
 CMD ["npm", "start"]
 

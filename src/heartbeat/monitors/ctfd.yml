@@ -1,0 +1,5 @@
+- type: http
+  schedule: '@every 10s'
+  check.response.status: 200
+  urls:
+    - "http://127.0.0.1/"
