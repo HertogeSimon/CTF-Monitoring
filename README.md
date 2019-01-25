@@ -2,8 +2,6 @@
 
 An all-in-one monitoring system made specifically for Capture The Flag competitions. Includes a dashboard, live attack/attempt visualisation, a Wall of Sheep and some minimal CTFd integration.
 
-![](preview.png)
-
 # Features
 
 - Network monitoring and analysis ([Bro](https://www.bro.org/))
@@ -19,8 +17,10 @@ An all-in-one monitoring system made specifically for Capture The Flag competiti
 ## Dashboard
 
 1. Install Docker + Docker Compose
+1. Clone this repo, including submodules: `git clone --recursive https://github.com/HertogeSimon/CTF-Monitoring.git`
+1. If necessary, change the adapter at services.bro.command in docker/docker-compose.yml
 1. Run `docker-compose up` in docker/ (this can take a while...)
-1. Go to [http://localhost:5601/](http://localhost:5601/)
+1. Navigate to [http://localhost:5601/](http://localhost:5601/)
 1. Create a new index pattern (e.g. 'logstash*') with index '@timestamp'
 1. Go to Management -> Saved Objects, and import dashboard.js
 
@@ -32,7 +32,8 @@ An all-in-one monitoring system made specifically for Capture The Flag competiti
 
 ## Wall of Sheep
 
-1. Go to http://localhost:3000/
+1. If necessary, change the adapter at Monitoring.interface in default.json (DoFler)
+1. Navigate to http://localhost:3000/
 
 ## CTFd integration
 
@@ -86,7 +87,7 @@ The first installation can easily take around 15 minutes; subsequent starts shou
 
 **Can I also analyze prerecorded pcap files with this?**
 
-Yes! Change the startup command of Bro from "-i \<network adapter\>" to "-r my.pcap", as currently commented out in docker/docker-compose.yml.
+Yes! Change the startup command of Bro from "-i \<network adapter\>" to "-r my.pcap", as currently commented out in docker-compose.yml.
 Some useful pcap files can be found on the following sites:  
 https://www.netresec.com/?page=PcapFiles  
 https://wiki.wireshark.org/SampleCaptures  
@@ -96,7 +97,9 @@ http://tcpreplay.appneta.com/wiki/captures.html
 
 1. Add a volume to the Bro container overwriting local.bro
 1. Add a filter to the logstash pipeline if necessary
-1. Add new fields to logstash-template.json
+1. Add the new fields to logstash-template.json
+
+Note: At the moment, a lot of bro output does not get processed. You can enable these by moving logstash filters from the disabled to the default pipeline directory.
 
 **How do I change X?**
 
